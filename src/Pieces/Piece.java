@@ -6,13 +6,19 @@ import java.awt.Graphics;
 public class Piece {
 	
 	private String name;
+	private ID id;
 	
-	public Piece(String name) {
+	public Piece(String name, ID id) {
 		this.name = name;
+		this.id = id;
 	}
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public ID getID() {
+		return id;
 	}
 	
 	public void render(Graphics g, int x, int y) {

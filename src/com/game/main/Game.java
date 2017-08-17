@@ -16,12 +16,13 @@ public class Game extends Canvas implements Runnable{
 	private static int rows = 8, cols = 8, tileWidth = 60, sidebarWidth = 60;
 	
 	// Public vars
-	public static final int WIDTH = rows * tileWidth + sidebarWidth, HEIGHT = cols * tileWidth; //WIDTH / 12 * 8;
+	public static final int WIDTH = cols * tileWidth + sidebarWidth, HEIGHT = rows * tileWidth; //WIDTH / 12 * 8;
 	
 	// Game constructor
 	public Game() {
 		board = new Board(rows, cols);
 		board.initBoard();
+		this.addMouseListener(new MouseInput(board));
 		
 		new Window(WIDTH, HEIGHT, "Chess Game", this);
 	}
