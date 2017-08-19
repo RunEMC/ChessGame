@@ -113,20 +113,19 @@ public class Board {
 		Piece piece = tile.getPiece();
 		String name = piece.getName();
 		ID id = piece.getID();
-		// If it is player1, then we want to decrease row, otherwise we increase it
-		int playerIncr = -1;
+		Tile testTile;
 		
-		// Player 1 clicks on their own piece
-		if (id == ID.player2) {
-			playerIncr = 1;
-		}
 		if (name == "pawn") {
-			Tile testTile;
+			// If it is player1, then we want to decrease row, otherwise we increase it
+			int playerIncr = -1;
+			// Player 2 moves downwards
+			if (id == ID.player2) {
+				playerIncr = 1;
+			}
 			// Check move forward
-			if (row >= 0 && row < rows) {
+			if (row + playerIncr >= 0 && row + playerIncr < rows) {
 				testTile = board[row + playerIncr][col];
-				String testName = testTile.getPiece().getName();
-				if (testName == "empty") {
+				if (testTile.checkEmpty()) {
 					testTile.setMovable(true, false, row, col);
 				}
 				// Check attack left
@@ -146,7 +145,52 @@ public class Board {
 			}
 		}
 		else if (name == "knight") {
-			
+			checkMoveable(row, col, -1, -2, id);
+			checkMoveable(row, col, -2, -1, id);
+			checkMoveable(row, col, 2, 1, id);
+			checkMoveable(row, col, 1, 2, id);
+			checkMoveable(row, col, 2, -1, id);
+			checkMoveable(row, col, 1, -2, id);
+			checkMoveable(row, col, -2, 1, id);
+			checkMoveable(row, col, -1, 2, id);
+		}
+		else if (name == "bishop") {
+			Boolean moveable;
+			for (int i = row - 1, j = -1; i >= 0 ; i--, j--) {
+				moveable = checkMoveable(row, col, j, j, id);
+				if (moveable && !board[row + j][col + j].checkEmpty()) break;
+			}
+			for (int i = row - 1, j = -1; i >= 0 ; i--, j--) {
+				moveable = checkMoveable(row, col, j, j * -1, id);
+				if (moveable && !board[row + j][col + j * -1].checkEmpty()) break;
+			}
+			for (int i = row + 1, j = 1; i < rows; i++, j++) {
+				moveable = checkMoveable(row, col, j, j, id);
+				if (moveable && !board[row + j][col + j].checkEmpty()) break;
+			}
+			for (int i = row + 1, j = 1; i < rows; i++, j++) {
+				moveable = checkMoveable(row, col, j, j * -1, id);
+				if (moveable && !board[row + j][col + j * -1].checkEmpty()) break;
+			}
+		}
+		else if (name == "rook") {
+			Boolean moveable;
+			for (int i = row - 1, j = -1; i >= 0 ; i--, j--) {
+				moveable = checkMoveable(row, col, j, 0, id);
+				if (moveable && !board[row + j][col].checkEmpty()) break;
+			}
+			for (int i = col - 1, j = -1; i >= 0 ; i--, j--) {
+				moveable = checkMoveable(row, col, 0, j, id);
+				if (moveable && !board[row][col + j].checkEmpty()) break;
+			}
+			for (int i = row + 1, j = 1; i < rows; i++, j++) {
+				moveable = checkMoveable(row, col, j, 0, id);
+				if (moveable && !board[row + j][col].checkEmpty()) break;
+			}
+			for (int i = col + 1, j = 1; i < cols; i++, j++) {
+				moveable = checkMoveable(row, col, 0, j, id);
+				if (moveable && !board[row][col + j].checkEmpty()) break;
+			}
 		}
 		else {
 			deactivateTile(row, col);
@@ -160,6 +204,27 @@ public class Board {
 			System.out.println("Player2");
 		}
 		System.out.println("Piece: " + name);
+	}
+	
+	private boolean checkMoveable(int row, int col, int addR, int addC, ID id) {
+		Tile testTile;
+		if (row + addR >= 0 && row + addR < rows) {
+			if (col + addC >= 0 && col + addC < cols) {
+				testTile = board[row + addR][col + addC];
+				// Check that the tile is not empty and is not a piece of the same player
+				//   this will indicate a move + attack
+				if (!testTile.checkEmpty() && testTile.getPiece().getID() != id) {
+					testTile.setMovable(true, true, row, col);
+				}
+				// Check that the tile is empty
+				//   this will indicate just a move
+				else if (testTile.checkEmpty()) {
+					testTile.setMovable(true, false, row, col);
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private void setDefaultFrontLine(int row, boolean white, ID id) {
