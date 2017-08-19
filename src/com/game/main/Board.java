@@ -72,9 +72,19 @@ public class Board {
 		if (existActiveTile) {
 			// Check if we are moving a piece
 			if (tile.checkActive()) {
-				//int tempx = tile.getOldX();
-				//int tempy = tile.getOldY();
 				// Handle moving piece
+				int tempx = tile.getOldX();
+				int tempy = tile.getOldY();
+				Piece newPiece = board[tempx][tempy].getPiece();
+
+				// Reset movement highlights
+				deactivateTile(row, col);
+				// Set new tile
+				tile.setPiece(newPiece);
+				tile.setEmpty(false);
+				// Set old tile
+				board[tempx][tempy].setPiece(new Piece("empty", ID.none));
+				board[tempx][tempy].setEmpty(true);
 			}
 			else {
 				deactivateTile(row, col);
@@ -134,6 +144,9 @@ public class Board {
 					}
 				}
 			}
+		}
+		else if (name == "knight") {
+			
 		}
 		else {
 			deactivateTile(row, col);

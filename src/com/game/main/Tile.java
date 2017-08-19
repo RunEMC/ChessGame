@@ -63,6 +63,14 @@ public class Tile {
 		oldY = y;
 	}
 	
+	public void setEmpty(boolean newEmp) {
+		empty = newEmp;
+	}
+	
+	public void setPiece(Piece newPiece) {
+		piece = newPiece;
+	}
+	
 	public boolean checkActive() {
 		return moveable;
 	}
