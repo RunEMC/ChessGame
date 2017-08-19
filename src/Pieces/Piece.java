@@ -40,7 +40,7 @@ public class Piece {
 		else if (name == "queen") {
 			g.setColor(Color.pink);
 		}
-		if (name != "emtpy") {
+		if (name != "empty") {
 			g.fillRect(x, y, 10, 10);;
 		}
 	}
