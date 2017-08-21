@@ -155,42 +155,29 @@ public class Board {
 			checkMoveable(row, col, -1, 2, id);
 		}
 		else if (name == "bishop") {
-			Boolean moveable;
-			for (int i = row - 1, j = -1; i >= 0 ; i--, j--) {
-				moveable = checkMoveable(row, col, j, j, id);
-				if (moveable && !board[row + j][col + j].checkEmpty()) break;
-			}
-			for (int i = row - 1, j = -1; i >= 0 ; i--, j--) {
-				moveable = checkMoveable(row, col, j, j * -1, id);
-				if (moveable && !board[row + j][col + j * -1].checkEmpty()) break;
-			}
-			for (int i = row + 1, j = 1; i < rows; i++, j++) {
-				moveable = checkMoveable(row, col, j, j, id);
-				if (moveable && !board[row + j][col + j].checkEmpty()) break;
-			}
-			for (int i = row + 1, j = 1; i < rows; i++, j++) {
-				moveable = checkMoveable(row, col, j, j * -1, id);
-				if (moveable && !board[row + j][col + j * -1].checkEmpty()) break;
+			for (int i = 0; i <= 8; i += 2) {
+				checkLineMoveable(i, row, col, id);
 			}
 		}
 		else if (name == "rook") {
-			Boolean moveable;
-			for (int i = row - 1, j = -1; i >= 0 ; i--, j--) {
-				moveable = checkMoveable(row, col, j, 0, id);
-				if (moveable && !board[row + j][col].checkEmpty()) break;
+			for (int i = 1; i <= 7; i += 2) {
+				checkLineMoveable(i, row, col, id);
 			}
-			for (int i = col - 1, j = -1; i >= 0 ; i--, j--) {
-				moveable = checkMoveable(row, col, 0, j, id);
-				if (moveable && !board[row][col + j].checkEmpty()) break;
+		}
+		else if (name == "queen") {
+			for (int i = 1; i <= 8; i++) {
+				checkLineMoveable(i, row, col, id);
 			}
-			for (int i = row + 1, j = 1; i < rows; i++, j++) {
-				moveable = checkMoveable(row, col, j, 0, id);
-				if (moveable && !board[row + j][col].checkEmpty()) break;
-			}
-			for (int i = col + 1, j = 1; i < cols; i++, j++) {
-				moveable = checkMoveable(row, col, 0, j, id);
-				if (moveable && !board[row][col + j].checkEmpty()) break;
-			}
+		}
+		else if (name == "king") {
+			checkMoveable(row, col, -1, 0, id);
+			checkMoveable(row, col, -1, 1, id);
+			checkMoveable(row, col, 0, 1, id);
+			checkMoveable(row, col, 1, 1, id);
+			checkMoveable(row, col, 1, 0, id);
+			checkMoveable(row, col, 1, -1, id);
+			checkMoveable(row, col, 0, -1, id);
+			checkMoveable(row, col, -1, -1, id);
 		}
 		else {
 			deactivateTile(row, col);
@@ -204,6 +191,37 @@ public class Board {
 			System.out.println("Player2");
 		}
 		System.out.println("Piece: " + name);
+	}
+	
+	// Dir is the direction with the mapping: 1 = N, 2 = NE, 3 = E, 4 = SE, 5 = S, 6 = SW, 7 = W, 8 = NW 
+	private void checkLineMoveable(int dir, int row, int col, ID id) {
+		boolean moveable;
+		int rMult = 1, cMult = 1;
+		switch(dir) {
+			case 1: cMult = 0;
+					rMult = -1;
+					break;
+			case 2: rMult = -1;
+					break;
+			case 3: rMult = 0;
+					break;
+			case 4: break;  // Default row, col = 1 case
+			case 5: cMult = 0;
+					break;
+			case 6: cMult = -1;
+					break;
+			case 7: rMult = 0;
+					cMult = -1;
+					break;
+			case 8: cMult = -1;
+					rMult = -1;
+					break;
+			default: break;
+		}
+		for (int i = 0, j = 1; i < rows; i++, j++) {
+			moveable = checkMoveable(row, col, j * rMult, j * cMult, id);
+			if (moveable && !board[row + j * rMult][col + j * cMult].checkEmpty()) break;
+		}
 	}
 	
 	private boolean checkMoveable(int row, int col, int addR, int addC, ID id) {
