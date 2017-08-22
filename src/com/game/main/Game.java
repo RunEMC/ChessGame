@@ -3,8 +3,6 @@ package com.game.main;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable{
@@ -80,7 +78,7 @@ public class Game extends Canvas implements Runnable{
 }
 
 /*
-1. Board -> list of list of tiles
+1. Board -> list of list of tiles (changed to 2-D array)
 2. Each tile contains its dimensions, color, clickable (bool) and its piece
 3. Each piece is one of empty, pawn, knight,...
 4. Each tile has an onclick event listener that first checks if it is clickable (see below)

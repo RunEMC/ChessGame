@@ -1,11 +1,7 @@
 package com.game.main;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.MouseListener;
-
-import javax.swing.JPanel;
 
 import Pieces.Piece;
 

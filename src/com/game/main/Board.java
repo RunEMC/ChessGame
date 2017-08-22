@@ -1,6 +1,7 @@
 package com.game.main;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import Pieces.ID;
@@ -11,6 +12,7 @@ public class Board {
 	private Tile[][] board;
 	private int rows, cols, tileWidth = 60;
 	private boolean existActiveTile = false, pOneTurn = true;
+	String msg = "Welcome to chess, white to start.";
 	
 	public Board(int rows, int cols) {
 		this.rows = rows;
@@ -55,11 +57,15 @@ public class Board {
 	}
 	
 	public void render(Graphics g) {
+		
 		for (int i = 0; i < this.rows; ++i) {
 			for (int j = 0; j < this.cols; ++j) {
 				this.board[i][j].render(g);
 			}
 		}
+		g.setColor(Color.black);
+		g.setFont(new Font("Purisa", Font.PLAIN, 14));
+		g.drawString(msg, 2, (rows)* tileWidth + 15);
 	}
 	
 	public void setTile(Tile tile, int row, int col) {
