@@ -39,7 +39,7 @@ public class Tile {
 		g.setColor(color);
 		g.fillRect(x, y, tileWidth, tileWidth);
 		if (!empty) {
-			piece.render(g, x, y);
+			piece.render(g, x, y, tileWidth);
 		}
 		if (moveable) {
 			g.setColor(Color.GREEN);

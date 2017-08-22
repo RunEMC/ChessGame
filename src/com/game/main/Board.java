@@ -10,7 +10,7 @@ public class Board {
 
 	private Tile[][] board;
 	private int rows, cols, tileWidth = 60;
-	private boolean existActiveTile = false;
+	private boolean existActiveTile = false, pOneTurn = true;
 	
 	public Board(int rows, int cols) {
 		this.rows = rows;
@@ -50,8 +50,8 @@ public class Board {
 		setDefaultBackLine(row, false, ID.player1);
 		
 		// DEBUG
-		Tile tempT = new Tile(new Piece("pawn", ID.player2), Color.black, false, 2*tileWidth, 5*tileWidth, tileWidth);
-		setTile(tempT, 5, 2);
+		//Tile tempT = new Tile(new Piece("pawn", ID.player2), Color.black, false, 2*tileWidth, 5*tileWidth, tileWidth);
+		//setTile(tempT, 5, 2);
 	}
 	
 	public void render(Graphics g) {
@@ -68,6 +68,7 @@ public class Board {
 	
 	public void handleClick(int row, int col) {
 		Tile tile = board[row][col];
+		ID id = tile.getPiece().getID();
 		
 		if (existActiveTile) {
 			// Check if we are moving a piece
@@ -85,15 +86,29 @@ public class Board {
 				// Set old tile
 				board[tempx][tempy].setPiece(new Piece("empty", ID.none));
 				board[tempx][tempy].setEmpty(true);
+				
+				// Set to next player's turn
+				pOneTurn = !pOneTurn;
 			}
 			else {
 				deactivateTile(row, col);
-				activateTile(tile, row, col);
+				if (id == ID.player1 && pOneTurn) {
+					activateTile(tile, row, col);
+				}
+				else if (id == ID.player2 && !pOneTurn) {
+					activateTile(tile, row, col);
+				}
 			}	
 		}
 		else {
-			activateTile(tile, row, col);
-			existActiveTile = true;
+			if (id == ID.player1 && pOneTurn) {
+				activateTile(tile, row, col);
+				existActiveTile = true;
+			}
+			else if (id == ID.player2 && !pOneTurn) {
+				activateTile(tile, row, col);
+				existActiveTile = true;
+			}
 		}
 	}
 	
@@ -181,6 +196,7 @@ public class Board {
 		}
 		else {
 			deactivateTile(row, col);
+			existActiveTile = false;
 		}
 		
 		// Debug

@@ -3,6 +3,8 @@ package com.game.main;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable{
@@ -13,10 +15,10 @@ public class Game extends Canvas implements Runnable{
 	private Thread thread;
 	private Boolean running = false;
 	private Board board;
-	private static int rows = 8, cols = 8, tileWidth = 60, sidebarWidth = 60;
+	private static int rows = 8, cols = 8, tileWidth = 60, sideBarWidth = 0, botBarWidth = 20;
 	
 	// Public vars
-	public static final int WIDTH = cols * tileWidth + sidebarWidth, HEIGHT = rows * tileWidth; //WIDTH / 12 * 8;
+	public static final int WIDTH = cols * tileWidth + sideBarWidth, HEIGHT = rows * tileWidth + botBarWidth; //WIDTH / 12 * 8;
 	
 	// Game constructor
 	public Game() {
@@ -62,7 +64,7 @@ public class Game extends Canvas implements Runnable{
 		
 		Graphics g = bs.getDrawGraphics();
 		
-		g.setColor(Color.blue);
+		g.setColor(Color.gray);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		board.render(g);
