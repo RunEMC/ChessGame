@@ -10,14 +10,16 @@ import Pieces.Piece;
 public class Board {
 
 	private Tile[][] board;
-	private int rows, cols, tileWidth = 60;
-	private boolean existActiveTile = false, pOneTurn = true;
+	private int rows, cols, tileWidth, botBarWidth;
+	private boolean existActiveTile = false, pOneTurn = true, gameOver = false;
 	String msg = "Welcome to chess, white to start.";
 	
-	public Board(int rows, int cols) {
+	public Board(int rows, int cols, int tileWidth, int botBarWidth) {
 		this.rows = rows;
 		this.cols = cols;
 		this.board = new Tile[rows][cols];
+		this.tileWidth = tileWidth;
+		this.botBarWidth = botBarWidth;
 	}
 	
 	public void initBoard() {
@@ -57,15 +59,22 @@ public class Board {
 	}
 	
 	public void render(Graphics g) {
-		
+		// Draw the tiles
 		for (int i = 0; i < this.rows; ++i) {
 			for (int j = 0; j < this.cols; ++j) {
 				this.board[i][j].render(g);
 			}
 		}
+		// Print the msg
 		g.setColor(Color.black);
 		g.setFont(new Font("Purisa", Font.PLAIN, 14));
 		g.drawString(msg, 2, (rows)* tileWidth + 15);
+		// Add reset button
+		g.setColor(new Color(153, 255, 204));
+		g.fillRect((cols - 1)* tileWidth, rows * tileWidth, tileWidth, botBarWidth);
+		g.setColor(Color.black);
+		g.setFont(new Font("Purisa", Font.PLAIN, 14));
+		g.drawString("Reset", (cols - 1) * tileWidth + 10, rows * tileWidth + 15);
 	}
 	
 	public void setTile(Tile tile, int row, int col) {
@@ -76,44 +85,54 @@ public class Board {
 		Tile tile = board[row][col];
 		ID id = tile.getPiece().getID();
 		
-		if (existActiveTile) {
-			// Check if we are moving a piece
-			if (tile.checkActive()) {
-				// Handle moving piece
-				int tempx = tile.getOldX();
-				int tempy = tile.getOldY();
-				Piece newPiece = board[tempx][tempy].getPiece();
+		if (!gameOver) {
+			if (existActiveTile) {
+				// Check if we are moving a piece
+				if (tile.checkActive()) {
+					// Check if player won
+					if (tile.getPiece().getName() == "king") {
+						msg = pOneTurn ? "White wins!" : "Brown wins!";
+						gameOver = true;
+					}
+					else {
+						// Set to next player's turn
+						pOneTurn = !pOneTurn;
+						msg = pOneTurn ? "It's white's turn." : "It's brown's turn.";
+					}
+					
+					// Handle moving piece
+					int tempx = tile.getOldX();
+					int tempy = tile.getOldY();
+					Piece newPiece = board[tempx][tempy].getPiece();
 
-				// Reset movement highlights
-				deactivateTile(row, col);
-				// Set new tile
-				tile.setPiece(newPiece);
-				tile.setEmpty(false);
-				// Set old tile
-				board[tempx][tempy].setPiece(new Piece("empty", ID.none));
-				board[tempx][tempy].setEmpty(true);
-				
-				// Set to next player's turn
-				pOneTurn = !pOneTurn;
+					// Reset movement highlights
+					deactivateTile(row, col);
+					// Set new tile
+					tile.setPiece(newPiece);
+					tile.setEmpty(false);
+					// Set old tile
+					board[tempx][tempy].setPiece(new Piece("empty", ID.none));
+					board[tempx][tempy].setEmpty(true);
+				}
+				else {
+					deactivateTile(row, col);
+					if (id == ID.player1 && pOneTurn) {
+						activateTile(tile, row, col);
+					}
+					else if (id == ID.player2 && !pOneTurn) {
+						activateTile(tile, row, col);
+					}
+				}	
 			}
 			else {
-				deactivateTile(row, col);
 				if (id == ID.player1 && pOneTurn) {
 					activateTile(tile, row, col);
+					existActiveTile = true;
 				}
 				else if (id == ID.player2 && !pOneTurn) {
 					activateTile(tile, row, col);
+					existActiveTile = true;
 				}
-			}	
-		}
-		else {
-			if (id == ID.player1 && pOneTurn) {
-				activateTile(tile, row, col);
-				existActiveTile = true;
-			}
-			else if (id == ID.player2 && !pOneTurn) {
-				activateTile(tile, row, col);
-				existActiveTile = true;
 			}
 		}
 	}

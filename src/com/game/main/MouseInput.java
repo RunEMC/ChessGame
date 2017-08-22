@@ -6,9 +6,11 @@ import java.awt.event.MouseEvent;
 public class MouseInput extends MouseAdapter {
 	
 	private Board board;
+	private Game game;
 	
-	public MouseInput(Board board) {
+	public MouseInput(Board board, Game game) {
 		this.board = board;
+		this.game = game;
 	}
 	
 	public void mousePressed(MouseEvent e) {
@@ -20,7 +22,10 @@ public class MouseInput extends MouseAdapter {
 		if (x < 8 && y < 8) {
 			board.handleClick(y, x);
 		}
-		//Tile position = floor(x/60)
-		System.out.println("Mouse pressed at (" + x + ", " + y + ")");
+		else {
+			game.buttonPress(e.getX(), e.getY());
+		}
+		// Debug
+		System.out.println("Mouse pressed at (" + e.getX() + ", " + e.getY() + ") Tile: (" + x + ", " + y + ")");
 	}
 }

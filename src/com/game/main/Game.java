@@ -11,20 +11,21 @@ public class Game extends Canvas implements Runnable{
 	
 	// Private vars
 	private Thread thread;
-	private Boolean running = false;
+	private Boolean running = false, paused = false;
 	private Board board;
 	private static int rows = 8, cols = 8, tileWidth = 60, sideBarWidth = 0, botBarWidth = 20;
+	private Window win;
 	
 	// Public vars
 	public static final int WIDTH = cols * tileWidth + sideBarWidth, HEIGHT = rows * tileWidth + botBarWidth; //WIDTH / 12 * 8;
 	
 	// Game constructor
 	public Game() {
-		board = new Board(rows, cols);
+		board = new Board(rows, cols, tileWidth, botBarWidth);
 		board.initBoard();
-		this.addMouseListener(new MouseInput(board));
+		this.addMouseListener(new MouseInput(board, this));
 		
-		new Window(WIDTH, HEIGHT, "Chess Game", this);
+		win = new Window(WIDTH, HEIGHT, "Chess Game", this);
 	}
 	
 	// Starts the game
@@ -47,9 +48,24 @@ public class Game extends Canvas implements Runnable{
 	// Runs the game
 	public void run() {
 		while (running) {
-			render();
+			if (!paused) {
+				render();	
+			}
 		}
 		stop();
+	}
+	
+	public void buttonPress(int x, int y) {
+		// Check if reset button was clicked
+		if (x > (cols - 1) * tileWidth && x < cols * tileWidth && y > (rows - 1) * tileWidth && y < rows * tileWidth + botBarWidth ) {
+			paused = true;
+			win.reset();
+			board = new Board(rows, cols, tileWidth, botBarWidth);
+			board.initBoard();
+			this.addMouseListener(new MouseInput(board, this));
+			win = new Window(WIDTH, HEIGHT, "Chess Game", this);
+			paused = false;
+		}
 	}
 	
 	// Render the graphics for the game
@@ -62,7 +78,7 @@ public class Game extends Canvas implements Runnable{
 		
 		Graphics g = bs.getDrawGraphics();
 		
-		g.setColor(Color.gray);
+		g.setColor(new Color(255, 255, 153));
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		board.render(g);
