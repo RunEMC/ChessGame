@@ -26,6 +26,6 @@ public class MouseInput extends MouseAdapter {
 			game.buttonPress(e.getX(), e.getY());
 		}
 		// Debug
-		System.out.println("Mouse pressed at (" + e.getX() + ", " + e.getY() + ") Tile: (" + x + ", " + y + ")");
+		//System.out.println("Mouse pressed at (" + e.getX() + ", " + e.getY() + ") Tile: (" + x + ", " + y + ")");
 	}
 }

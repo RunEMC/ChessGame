@@ -133,14 +133,8 @@ public class Board {
 				}	
 			}
 			else {
-				if (id == ID.player1 && pOneTurn) {
-					activateTile(tile, row, col);
-					existActiveTile = true;
-				}
-				else if (id == ID.player2 && !pOneTurn) {
-					activateTile(tile, row, col);
-					existActiveTile = true;
-				}
+				activateTile(tile, row, col);
+				existActiveTile = true;
 			}
 		}
 	}
@@ -233,13 +227,13 @@ public class Board {
 		}
 		
 		// Debug
-		if (id == ID.player1) {
+		/*if (id == ID.player1) {
 			System.out.println("Player1");
 		}
 		else if (id == ID.player2) {
 			System.out.println("Player2");
 		}
-		System.out.println("Piece: " + name);
+		System.out.println("Piece: " + name);*/
 	}
 	
 	// Dir is the direction with the mapping: 1 = N, 2 = NE, 3 = E, 4 = SE, 5 = S, 6 = SW, 7 = W, 8 = NW 
