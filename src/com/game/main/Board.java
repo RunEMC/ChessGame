@@ -58,6 +58,14 @@ public class Board {
 		//setTile(tempT, 5, 2);
 	}
 	
+	public void reset() {
+		existActiveTile = false;
+		pOneTurn = true;
+		gameOver = false;
+		msg = "Welcome to chess, white to start.";
+		//initBoard();
+	}
+	
 	public void render(Graphics g) {
 		// Draw the tiles
 		for (int i = 0; i < this.rows; ++i) {

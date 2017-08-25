@@ -59,7 +59,7 @@ public class Piece {
 			g.setColor(Color.pink);
 		}
 		if (name != "empty") {
-			g.fillRect(x, y, 10, 10);
+			//g.fillRect(x, y, 10, 10);
 		    g.drawImage(img, x, y, tileWidth, tileWidth, null);
 		}
 	}

@@ -14,7 +14,6 @@ public class Game extends Canvas implements Runnable{
 	private Boolean running = false, paused = false;
 	private Board board;
 	private static int rows = 8, cols = 8, tileWidth = 60, sideBarWidth = 0, botBarWidth = 20;
-	private Window win;
 	
 	// Public vars
 	public static final int WIDTH = cols * tileWidth + sideBarWidth, HEIGHT = rows * tileWidth + botBarWidth; //WIDTH / 12 * 8;
@@ -25,7 +24,7 @@ public class Game extends Canvas implements Runnable{
 		board.initBoard();
 		this.addMouseListener(new MouseInput(board, this));
 		
-		win = new Window(WIDTH, HEIGHT, "Chess Game", this);
+		new Window(WIDTH, HEIGHT, "Chess Game", this);
 	}
 	
 	// Starts the game
@@ -59,12 +58,9 @@ public class Game extends Canvas implements Runnable{
 		// Check if reset button was clicked
 		if (x > (cols - 1) * tileWidth && x < cols * tileWidth && y > (rows - 1) * tileWidth && y < rows * tileWidth + botBarWidth ) {
 			paused = true;
-			win.reset();
-			board = new Board(rows, cols, tileWidth, botBarWidth);
-			board.initBoard();
-			this.addMouseListener(new MouseInput(board, this));
-			win = new Window(WIDTH, HEIGHT, "Chess Game", this);
+			board.reset();
 			paused = false;
+			board.initBoard();
 		}
 	}
 	
